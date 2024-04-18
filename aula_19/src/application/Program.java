@@ -3,8 +3,6 @@ package application;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
-import java.util.Scanner;
 
 public class Program{
     public static void main(String[] args){
