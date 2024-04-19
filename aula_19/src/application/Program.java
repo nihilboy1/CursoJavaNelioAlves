@@ -48,7 +48,7 @@ public class Program{
 
 
          DateTimeFormatter customFormat1 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-         DateTimeFormatter customFormat2 = DateTimeFormatter.ofPattern("dd/MM/yyyy | HH:mm")
+         DateTimeFormatter customFormat2 = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
                  .withZone(ZoneId.systemDefault());
 
          System.out.println(dateTime1.format(customFormat1));
