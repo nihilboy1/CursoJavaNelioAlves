@@ -6,4 +6,8 @@ public class Comment{
     public Comment(String text){
         this.text = text;
     }
+
+    public String getText(){
+        return text;
+    }
 }
