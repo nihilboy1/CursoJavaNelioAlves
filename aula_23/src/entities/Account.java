@@ -19,12 +19,12 @@ public class Account{
         return holder;
     }
 
-    public double getBalance(){
+    public final double getBalance(){
         return balance;
     }
 
     public void withdraw(double amount){
-        balance -= amount;
+        balance -= amount + 5.0;
     }
 
     public void deposit(double amount){

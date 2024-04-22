@@ -2,9 +2,24 @@ package application;
 
 import entities.Account;
 import entities.BusinessAccount;
+import entities.SavingsAccount;
 
 public class Program{
     public static void main(String[] args){
+        Account acc1 = new Account(1100, "Alex", 1000.00);
+        acc1.withdraw(200);
+        System.out.println(acc1.getBalance());
+
+        SavingsAccount acc2 = new SavingsAccount(1110, "Alexander", 1000.00, 0.01);
+        acc2.withdraw(200);
+        System.out.println(acc2.getBalance());
+
+        BusinessAccount acc3 = new BusinessAccount(1101, "Alexis", 1000.00, 5000);
+        acc3.withdraw(200);
+        System.out.println(acc3.getBalance());
+    }
+
+    public void upAndDowncasting(){
         Account account1 = new Account(1001, "Sam", 1.500);
         BusinessAccount businessAccount1 = new BusinessAccount(1001, "Sam", 1.500, 10000);
         // UPCASTING - Instanciando os dados de uma SUBCLASSE numa variavel do tipo da SUPERCLASSE
@@ -33,5 +48,44 @@ public class Program{
         if(account2 instanceof BusinessAccount){
             BusinessAccount account5 = (BusinessAccount) account2;
         }
+    }
+
+    public void aboutFinal(){
+        /*
+        No Java, a palavra-chave `final` é usada para indicar que um elemento do código não pode ser modificado depois de ser definido. Ela pode ser aplicada a variáveis, métodos e classes, e cada uso tem um significado específico.
+
+        ### Variáveis `final`:
+        Quando uma variável é declarada como `final`, seu valor não pode ser alterado após ser inicializado. Isso significa que, uma vez que você atribuiu um valor a uma variável `final`, ela sempre manterá esse valor:
+        ```java
+        final int x = 10;  // 'x' é uma variável final.
+        x = 20; // Isso causará um erro de compilação, pois 'x' já foi inicializado.
+        ```
+        Isso é útil para criar constantes no seu código, permitindo que valores que não devem ser alterados sejam claramente marcados.
+
+        ### Métodos `final`:
+        Um método declarado como `final` não pode ser sobrescrito por subclasses. Isso pode ser útil para garantir que o comportamento de um método específico permaneça consistente em toda a hierarquia de classes:
+        ```java
+        class Animal {
+        final void emitirSom() {
+        System.out.println("Som de animal");
+        }
+        }
+        class Cachorro extends Animal {
+        // Não é possível sobrescrever o método emitirSom() aqui, pois é final na classe Animal.
+        }
+        ```
+
+        ### Classes `final`:
+        Quando uma classe é declarada como `final`, ela não pode ser estendida por nenhuma outra classe. Isso é útil para garantir que a implementação da classe permaneça inalterada e também pode ser usado por razões de segurança ou design:
+        ```java
+        final class Pessoa {
+        // Não pode ser estendida por outras classes.
+        }
+        // Isso causará um erro de compilação, pois a classe Pessoa é final.
+        // class Estudante extends Pessoa { }
+        ```
+        O uso de `final` pode ajudar a manter um código mais seguro e previsível, uma vez que impede alterações não intencionais nos elementos que você quer manter imutáveis. No entanto, é importante usá-lo com moderação e apenas quando necessário para evitar restrições desnecessárias no design do seu código.
+        */
+
     }
 }
