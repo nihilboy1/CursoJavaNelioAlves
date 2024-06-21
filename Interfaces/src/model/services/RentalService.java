@@ -8,12 +8,12 @@ import java.time.Duration;
 public class RentalService{
     private Double pricePerHour;
     private Double pricePerDay;
-    private BrazilTaxService taxServices;
+    private TaxService taxService;
 
-    public RentalService(Double pricePerHour, Double pricePerDay, BrazilTaxService taxServices){
+    public RentalService(Double pricePerHour, Double pricePerDay, BrazilTaxService taxService){
         this.pricePerHour = pricePerHour;
         this.pricePerDay = pricePerDay;
-        this.taxServices = taxServices;
+        this.taxService = taxService;
     }
 
     public void processInvoice(CarRental carRental){
@@ -26,7 +26,7 @@ public class RentalService{
             }else {
                 basicPayment = pricePerDay * Math.ceil(rentalHours / 24);
             }
-            carRental.setInvoice(new Invoice(basicPayment, taxServices.brazilTax(basicPayment)));
+            carRental.setInvoice(new Invoice(basicPayment, taxService.tax(basicPayment)));
     }
 
 
