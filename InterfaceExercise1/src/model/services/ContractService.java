@@ -13,18 +13,15 @@ public class ContractService {
         this.onlinePaymentService = onlinePaymentService;
     }
 
-    public List<Installment> processContract(Contract contract, Integer numberOfInstallments){
+    public void processContract(Contract contract, Integer numberOfInstallments){
         double noTaxesInstallment = contract.getTotalValue() / numberOfInstallments;
-        List<Installment> installmentsList = new ArrayList<>();
-        for(int i = 0; i < numberOfInstallments; i++){
-            LocalDate installmentNextDate = contract.getExecutionDate().plusMonths(i+1);
-            double installmentFinalAmount = onlinePaymentService.paymentFee(onlinePaymentService.interest(noTaxesInstallment,
-                    i + 1));
-            Installment installment = new Installment(installmentNextDate, installmentFinalAmount);
-            installmentsList.add(installment);
+        for(int i = 1; i <= numberOfInstallments; i++){
+            LocalDate installmentNextDate = contract.getExecutionDate().plusMonths(i);
+            double interest = onlinePaymentService.interest(noTaxesInstallment, i);
+            double installmentFinalAmount =
+                    onlinePaymentService.paymentFee(interest + noTaxesInstallment) + noTaxesInstallment + interest;
+            contract.getInstallments().add(new Installment(installmentNextDate, installmentFinalAmount)) ;
         }
-
-        return installmentsList;
     }
 
 

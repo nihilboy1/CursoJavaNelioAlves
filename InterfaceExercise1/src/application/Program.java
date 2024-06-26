@@ -34,7 +34,7 @@ public class Program{
         System.out.print("Número de Parcelas: ");
         Integer numberOfInstallments = sc.nextInt();
         sc.nextLine();
-        contract.setInstallments(contractService.processContract(contract, numberOfInstallments));
+        contractService.processContract(contract, numberOfInstallments);
         System.out.println("Parcelas:");
         for(Installment installmentData : contract.getInstallments() ){
             System.out.println(installmentData);
