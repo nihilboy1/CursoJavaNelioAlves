@@ -1,7 +1,6 @@
 package application;
 
 import db.DB;
-import db.DbException;
 import db.DbIntegrityException;
 
 import java.sql.*;
@@ -12,54 +11,6 @@ public class Program{
 
     }
 
-
-
-    /**
-     * Método que executa múltiplas operações de atualização em uma única transação.
-     *
-     * Este método demonstra como usar transações no JDBC para garantir que um grupo de operações
-     * SQL sejam executadas de forma atômica. A transação é confirmada apenas se todas as operações
-     * forem bem-sucedidas; caso contrário, todas as mudanças são revertidas.
-     */
-    public static void TRANSACTIONS() {
-        Statement st = null;
-        Connection conn = null;
-
-        try {
-            // Obtendo a conexão com o banco de dados
-            conn = DB.getConnection();
-
-            // Desabilitando o autocommit para iniciar a transação
-            conn.setAutoCommit(false);
-
-            // Criando um Statement para executar as operações SQL
-            st = conn.createStatement();
-
-            // Executando a primeira operação de atualização
-            int rows1 = st.executeUpdate("UPDATE seller SET BaseSalary = 2090 WHERE DepartmentId = 1");
-            // Executando a segunda operação de atualização
-            int rows2 = st.executeUpdate("UPDATE seller SET BaseSalary = 3090 WHERE DepartmentId = 2");
-
-            // Confirmando a transação se todas as operações forem bem-sucedidas
-            conn.commit();
-
-            // Imprimindo o número de linhas afetadas por cada operação
-            System.out.println("rows1 = " + rows1);
-            System.out.println("rows2 = " + rows2);
-        } catch (SQLException e) {
-            try {
-                // Revertendo a transação em caso de erro
-                conn.rollback();
-                throw new DbException("Transaction rolled back! Caused by: " + e.getMessage());
-            } catch (SQLException e1) {
-                throw new DbException("Error trying to rollback! Caused by: " + e1.getMessage());
-            }
-        } finally {
-            // Fechando o Statement e a conexão, garantindo que os recursos sejam liberados
-            DB.closeStatement(st);
-            DB.closeConnection();
-        }
-    }
 
     public static void DELETE(){
         Connection connection = null;
