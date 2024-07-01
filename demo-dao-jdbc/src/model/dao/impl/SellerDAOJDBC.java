@@ -3,6 +3,7 @@ package model.dao.impl;
 import db.DB;
 import db.DbException;
 import model.dao.SellerDAO;
+import model.dao.utils.Inst;
 import model.entities.Department;
 import model.entities.Seller;
 
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SellerDAOJDBC implements SellerDAO{
-    private Connection connection;
+    private final Connection connection;
 
     public SellerDAOJDBC(Connection connection){
         this.connection = connection;
@@ -23,7 +24,7 @@ public class SellerDAOJDBC implements SellerDAO{
     public void insert(Seller seller){
         PreparedStatement prepStatement = null;
         try{
-            prepStatement = connection.prepareStatement("INSERT INTO seller (Name, Email, BirthDate, BaseSalary, " + "DepartmentId) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            prepStatement = connection.prepareStatement("INSERT INTO seller (Name, Email, BirthDate, BaseSalary, DepartmentId) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             prepStatement.setString(1, seller.getName());
             prepStatement.setString(2, seller.getEmail());
             prepStatement.setDate(3, new Date(seller.getBirthDate().getTime()));
@@ -69,8 +70,17 @@ public class SellerDAOJDBC implements SellerDAO{
     }
 
     @Override
-    public void deleteById(Integer Id){
-
+    public void deleteById(Integer id){
+        PreparedStatement prepStatement = null;
+        try{
+            prepStatement = connection.prepareStatement("DELETE FROM seller WHERE Id = ?");
+            prepStatement.setInt(1, id);
+            prepStatement.executeUpdate();
+        }catch(SQLException e){
+            throw new DbException(e.getMessage());
+        }finally{
+            DB.closeStatement(prepStatement);
+        }
     }
 
     @Override
@@ -84,8 +94,8 @@ public class SellerDAOJDBC implements SellerDAO{
             resultSet = prepStatement.executeQuery();
 
             if(resultSet.next()){
-                Department department = instanciateDepartment(resultSet);
-                return instanciateSeller(resultSet, department);
+                Department department = Inst.instanciateDepartment(resultSet);
+                return Inst.instanciateSeller(resultSet, department);
             }
             return null;
         }catch(SQLException e){
@@ -113,11 +123,11 @@ public class SellerDAOJDBC implements SellerDAO{
                 Department department = departmentMap.get(resultDepartmentId);
 
                 if(department == null){
-                    department = instanciateDepartment(resultSet);
+                    department = Inst.instanciateDepartment(resultSet);
                     departmentMap.put(resultDepartmentId, department);
                 }
 
-                Seller seller = instanciateSeller(resultSet, department);
+                Seller seller = Inst.instanciateSeller(resultSet, department);
                 sellerList.add(seller);
             }
             return sellerList;
@@ -147,11 +157,11 @@ public class SellerDAOJDBC implements SellerDAO{
                 Department department = departmentMap.get(resultDepartmentId);
 
                 if(department == null){
-                    department = instanciateDepartment(resultSet);
+                    department = Inst.instanciateDepartment(resultSet);
                     departmentMap.put(resultDepartmentId, department);
                 }
 
-                Seller seller = instanciateSeller(resultSet, department);
+                Seller seller = Inst.instanciateSeller(resultSet, department);
                 sellerList.add(seller);
             }
             return sellerList;
@@ -161,13 +171,5 @@ public class SellerDAOJDBC implements SellerDAO{
             DB.closeStatement(prepStatement);
             DB.closeResultSet(resultSet);
         }
-    }
-
-    private Seller instanciateSeller(ResultSet resultSet, Department department) throws SQLException{
-        return new Seller(resultSet.getInt("Id"), resultSet.getString("Name"), resultSet.getString("Email"), resultSet.getDate("BirthDate"), resultSet.getDouble("BaseSalary"), department);
-    }
-
-    private Department instanciateDepartment(ResultSet resultSet) throws SQLException{
-        return new Department(resultSet.getInt("DepartmentId"), resultSet.getString("DepartmentName"));
     }
 }

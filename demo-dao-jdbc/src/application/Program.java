@@ -37,10 +37,13 @@ public class Program{
         System.out.println();
         System.out.println("=== TESTE N5: seller update -");
         Seller seller1 = sellerDAO.findById(2);
+        // seller1.setName("Clark");
+        // seller1.setEmail("clark@gmail.com");
+        // sellerDAO.update(seller1);
         System.out.println(seller1);
-        seller1.setName("Clark");
-        seller1.setEmail("clark@gmail.com");
-        sellerDAO.update(seller1);
-        System.out.println(seller1);
+
+        System.out.println("=== TESTE N6: seller delete -");
+        sellerDAO.deleteById(6);
+        System.out.println();
     }
 }
