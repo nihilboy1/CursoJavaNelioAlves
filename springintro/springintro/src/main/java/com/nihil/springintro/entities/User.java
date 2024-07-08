@@ -1,13 +1,12 @@
 package com.nihil.springintro.entities;
 
-
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_user")
+@Table(name = "UserTb")
 public class User implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +16,9 @@ public class User implements Serializable{
     private String phone;
     private String password;
 
-    public User(){}
+    // por estar usando framework, é obrigatório passar um contrutor vazio
+    public User(){
+    }
 
     public User(Long id, String name, String email, String phone, String password){
         this.id = id;
@@ -69,8 +70,9 @@ public class User implements Serializable{
 
     @Override
     public boolean equals(Object o){
-        if(this == o) return true; // compara se é literalmente o mesmo objeto
-        if(o == null || getClass() != o.getClass()) return false; // Verifica se o objeto passado é null ou de uma classe diferente
+        if(this == o) return true; // compara se é literalmente o mesmo objeto, se sim, retorna true
+        if(o == null || getClass() != o.getClass()) return false; // Verifica se o objeto passado é null ou de uma
+        // classe diferente, se sim retorna falso
         User user = (User) o; // Faz um cast do objeto 'o' para o tipo User.
         return Objects.equals(getId(), user.getId()); // Compara os IDs dos objetos 'User' para determinar se são iguais.
     }

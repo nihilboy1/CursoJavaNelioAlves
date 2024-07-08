@@ -12,6 +12,7 @@ import java.util.Arrays;
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner{
+    // esse autowired permite que eu use a classe UserRepository sem ter que passar ela como argumento no construtor
     @Autowired
     private UserRepository userRepository;
 
