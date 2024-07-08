@@ -1,5 +1,6 @@
 package com.nihil.springintro.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -17,6 +18,7 @@ public class User implements Serializable{
     private String email;
     private String phone;
     private String password;
+    @JsonIgnore // evita loop infinito
     @OneToMany(mappedBy = "client") // significa que haverá 1 usuário para muitos pedidos
     private List<Order> orders = new ArrayList<>();
 
