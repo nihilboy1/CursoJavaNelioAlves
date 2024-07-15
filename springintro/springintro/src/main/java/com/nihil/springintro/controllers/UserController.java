@@ -4,11 +4,10 @@ import com.nihil.springintro.entities.User;
 import com.nihil.springintro.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController // declara que essa classe é um COMPONENTE CONTROLLER rest
@@ -29,5 +28,12 @@ public class UserController{
     public ResponseEntity<User> findById(@PathVariable Long id){
         User user = service.findById(id);
         return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping
+    public ResponseEntity<User> insertUser(@RequestBody User user){
+        User createdUser = service.insert(user);
+        URI userUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdUser.getId()).toUri();
+        return ResponseEntity.created(userUri).body(createdUser);
     }
 }
