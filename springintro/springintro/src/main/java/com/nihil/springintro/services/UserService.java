@@ -2,6 +2,7 @@ package com.nihil.springintro.services;
 
 import com.nihil.springintro.entities.User;
 import com.nihil.springintro.repositories.UserRepository;
+import com.nihil.springintro.services.exceptions.ControllerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UserService{
 
     public User findById(long id){
         Optional<User> userOptional = userRepository.findById(id);
-        return userOptional.get();
+        return userOptional.orElseThrow(() -> new ControllerNotFoundException(id));
     }
 
     public User insert(User user){
