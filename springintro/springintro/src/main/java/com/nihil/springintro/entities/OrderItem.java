@@ -12,13 +12,13 @@ import java.util.Objects;
 @Entity
 @Table(name = "orderItemTb")
 public class OrderItem implements Serializable{
-
     @EmbeddedId
     private OrderItemPK id = new OrderItemPK();
     private Integer quantity;
     private Double price;
 
-    public OrderItem(){}
+    public OrderItem(){
+    }
 
     public OrderItem(Order order, Product product, Integer quantity, Double price){
         id.setOrder(order);
@@ -70,6 +70,6 @@ public class OrderItem implements Serializable{
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(id);
+        return Objects.hash(id);
     }
 }

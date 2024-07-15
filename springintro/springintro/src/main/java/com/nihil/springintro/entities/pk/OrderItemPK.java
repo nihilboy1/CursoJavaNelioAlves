@@ -3,19 +3,17 @@ package com.nihil.springintro.entities.pk;
 import com.nihil.springintro.entities.Order;
 import com.nihil.springintro.entities.Product;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-@Embeddable // declara que essa classe refere-se a um item composto, não a uma entidade em si.
+@Embeddable
 public class OrderItemPK implements Serializable{
     @ManyToOne
-    @JoinColumn(name = "orderId")
     private Order order;
+
     @ManyToOne
-    @JoinColumn(name = "productId")
     private Product product;
 
     public Order getOrder(){
@@ -39,11 +37,11 @@ public class OrderItemPK implements Serializable{
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
         OrderItemPK that = (OrderItemPK) o;
-        return Objects.equals(getOrder(), that.getOrder()) && Objects.equals(getProduct(), that.getProduct());
+        return Objects.equals(order, that.order) && Objects.equals(product, that.product);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hash(getOrder(), getProduct());
+        return Objects.hash(order, product);
     }
 }

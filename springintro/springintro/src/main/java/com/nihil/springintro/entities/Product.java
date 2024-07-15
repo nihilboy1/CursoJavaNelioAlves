@@ -1,5 +1,6 @@
 package com.nihil.springintro.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -17,6 +18,9 @@ public class Product implements Serializable{
     private String description;
     private Double price;
     private String imgUrl;
+
+    @OneToMany(mappedBy = "id.product")
+    private Set<OrderItem> orderItemSet = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "ProductCategoryTb", joinColumns = @JoinColumn(name = "ProductId"), inverseJoinColumns = @JoinColumn(name = "CategoryId"))
@@ -77,16 +81,25 @@ public class Product implements Serializable{
         return categories;
     }
 
+    @JsonIgnore
+    public Set<Order> getOrders(){
+        Set<Order> orderSet = new HashSet<>();
+        for(OrderItem orderItem : orderItemSet){
+            orderSet.add(orderItem.getOrder());
+        }
+        return orderSet;
+    }
+
     @Override
     public boolean equals(Object o){
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(getId(), product.getId());
+        return Objects.equals(id, product.id);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(getId());
+        return Objects.hash(id);
     }
 }

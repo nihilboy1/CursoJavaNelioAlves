@@ -1,6 +1,7 @@
 package com.nihil.springintro.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nihil.springintro.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
@@ -16,21 +17,24 @@ public class Order implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant instant;
 
     private Integer orderStatus;
 
-    @ManyToOne // indica que haverão muitos Order para 1 User
+    @ManyToOne
     @JoinColumn(name = "ClientId")
     private User client;
 
-    // não entendi
     @OneToMany(mappedBy = "id.order")
+    @JsonManagedReference
     private Set<OrderItem> orderItems = new HashSet<>();
 
-    public Order(){
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
+    public Order(){
     }
 
     public Order(Long id, Instant instant, OrderStatus orderStatus, User client){
@@ -38,16 +42,6 @@ public class Order implements Serializable{
         this.instant = instant;
         this.client = client;
         setOrderStatus(orderStatus);
-    }
-
-    public OrderStatus getOrderStatus(){
-        return OrderStatus.valueOf(orderStatus);
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus){
-        if(orderStatus != null){
-            this.orderStatus = orderStatus.getCode();
-        }
     }
 
     public Long getId(){
@@ -66,6 +60,16 @@ public class Order implements Serializable{
         this.instant = instant;
     }
 
+    public OrderStatus getOrderStatus(){
+        return OrderStatus.valueOf(orderStatus);
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus){
+        if(orderStatus != null){
+            this.orderStatus = orderStatus.getCode();
+        }
+    }
+
     public User getClient(){
         return client;
     }
@@ -74,9 +78,16 @@ public class Order implements Serializable{
         this.client = client;
     }
 
-
     public Set<OrderItem> getOrderItems(){
         return orderItems;
+    }
+
+    public Payment getPayment(){
+        return payment;
+    }
+
+    public void setPayment(Payment payment){
+        this.payment = payment;
     }
 
     @Override
@@ -84,11 +95,11 @@ public class Order implements Serializable{
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(getId(), order.getId());
+        return Objects.equals(id, order.id);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(getId());
+        return Objects.hash(id);
     }
 }
