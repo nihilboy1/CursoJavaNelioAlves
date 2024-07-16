@@ -4,6 +4,7 @@ import com.nihil.springintro.entities.User;
 import com.nihil.springintro.repositories.UserRepository;
 import com.nihil.springintro.services.exceptions.ControllerNotFoundException;
 import com.nihil.springintro.services.exceptions.DatabaseException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -42,11 +43,13 @@ public class UserService{
     }
 
     public User update(Long id, User user){
-        User refUser = userRepository.getReferenceById(id);
-
-        updateData(refUser, user);
-
-        return userRepository.save(refUser);
+        try{
+            User refUser = userRepository.getReferenceById(id);
+            updateData(refUser, user);
+            return userRepository.save(refUser);
+        }catch(EntityNotFoundException e){
+            throw new ControllerNotFoundException(id);
+        }
     }
 
     private void updateData(User refUser, User user){
