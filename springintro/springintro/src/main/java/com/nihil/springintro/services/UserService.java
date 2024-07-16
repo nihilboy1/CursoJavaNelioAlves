@@ -3,7 +3,10 @@ package com.nihil.springintro.services;
 import com.nihil.springintro.entities.User;
 import com.nihil.springintro.repositories.UserRepository;
 import com.nihil.springintro.services.exceptions.ControllerNotFoundException;
+import com.nihil.springintro.services.exceptions.DatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +32,13 @@ public class UserService{
     }
 
     public void delete(Long id){
-        userRepository.deleteById(id);
+        try{
+            userRepository.deleteById(id);
+        }catch(EmptyResultDataAccessException e){
+            throw new ControllerNotFoundException(id);
+        }catch(DataIntegrityViolationException e){
+            throw new DatabaseException(e.getMessage());
+        }
     }
 
     public User update(Long id, User user){
